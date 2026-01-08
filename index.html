@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philippine Dress-Up Game</title>
+
+<style>
+body {
+  font-family: 'Verdana', sans-serif;
+  background: #f3e9dc;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+.game-container {
+  max-width: 360px;
+  margin: auto;
+  background: #fff7eb;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+h1 {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+.character-box {
+  width: 200px;
+  height: 260px;
+  margin: 15px auto;
+  position: relative;
+}
+
+.character-box img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade {
+  opacity: 0;
+}
+
+button {
+  background: #a44a3f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background: #8c3f36;
+}
+
+.score {
+  margin-top: 10px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.ethnic-name {
+  margin-top: 5px;
+  font-size: 1em;
+  color: #5b3a29;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+  <h1>Ethnic Dress-Up Game</h1>
+
+  <div class="character-box">
+    <img id="character" src="images/pixel.png" alt="Character">
+  </div><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Habi: Luzon Dress-Up Quest</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: monospace;
+        background: #f2e6d8;
+        text-align: center;
+    }
+
+    .screen {
+        display: none;
+        padding: 20px;
+    }
+
+    .active {
+        display: block;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 8px;
+        font-family: monospace;
+        font-size: 16px;
+        cursor: pointer;
+        background: #c49a6c;
+        border: 2px solid #5a3e2b;
+        color: #fff;
+    }
+
+    button:hover {
+        background: #a87c4f;
+    }
+
+    .character-box {
+        margin: 20px auto;
+        width: 180px;
+        height: 240px;
+        border: 4px solid #5a3e2b;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    img {
+        width: 180px;
+        image-rendering: pixelated;
+        transition: opacity 0.4s ease-in-out;
+    }
+
+    .fade {
+        opacity: 0;
+    }
+
+    .info {
+        margin-top: 10px;
+        background: #fff6e5;
+        border: 2px solid #5a3e2b;
+        padding: 10px;
+    }
+
+    .score {
+        margin-top: 8px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- MAIN MENU -->
+<div id="menu" class="screen active">
+    <h1>🎮 HABI</h1>
+    <p>Luzon Dress-Up Quest</p>
+    <button onclick="goTo('select')">▶ Start Game</button>
+</div>
+
+<!-- ETHNIC GROUP SELECTION -->
+<div id="select" class="screen">
+    <h1>Choose an Ethnic Group</h1>
+    <button onclick="startGame('kalinga')">Kalinga</button>
+    <button onclick="startGame('ivatan')">Ivatan</button>
+    <button onclick="startGame('bontoc')">Bontoc</button>
+    <button onclick="startGame('tagalog')">Tagalog</button>
+    <br>
+    <button onclick="goTo('menu')">⬅ Back</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game" class="screen">
+    <h1 id="groupTitle"></h1>
+
+    <div class="character-box">
+        <img id="characterImage" src="" alt="pixel">
+    </div>
+
+    <div>
+        <button onclick="changeOutfit()">👗 Change Outfit</button>
+        <button onclick="showFact()">📖 Culture Fact</button>
+    </div>
+
+    <div class="info" id="infoBox">
+        Dress up your character!
+    </div>
+
+    
+
+    <br>
+    <button onclick="goTo('select')">⬅ Choose Another Group</button>
+</div>
+
+<script>
+    const facts = {
+        kalinga: "Kalinga textiles symbolize bravery, identity, and community.",
+        ivatan: "Ivatan clothing protects against strong winds and heavy rain.",
+        bontoc: "Bontoc patterns often represent nature and ancestry.",
+        tagalog: "Tagalog attire reflects elegance and Spanish-era influence."
+    };
+
+    const titles = {
+        kalinga: "🔴 Kalinga Dress-Up",
+        ivatan: "🌊 Ivatan Dress-Up",
+        bontoc: "🏔️ Bontoc Dress-Up",
+        tagalog: "🌸 Tagalog Dress-Up"
+    };
+
+    // 🔹 Outfit images per group
+    const outfits = {
+        kalinga: ["images/kalinga1.png", "images/kalinga2.png"],
+        ivatan: ["images/ivatan1.png", "images/ivatan2.png"],
+        bontoc: ["images/bontoc1.png", "images/bontoc2.png"],
+        tagalog: ["images/tagalog1.png", "images/tagalog2.png"]
+    };
+
+    let currentGroup = "";
+    let outfitIndex = 0;
+    let score = 0;
+
+    function goTo(screen) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screen).classList.add('active');
+    }
+
+    function startGame(group) {
+        currentGroup = group;
+        outfitIndex = 0;
+        document.getElementById("groupTitle").innerText = titles[group];
+        document.getElementById("characterImage").src = outfits[group][0];
+        document.getElementById("infoBox").innerText = "Dress up your character!";
+        goTo('game');
+    }
+
+    function changeOutfit() {
+        const img = document.getElementById("characterImage");
+        img.classList.add("fade");
+
+        setTimeout(() => {
+            outfitIndex = (outfitIndex + 1) % outfits[currentGroup].length;
+            img.src = outfits[currentGroup][outfitIndex];
+            img.classList.remove("fade");
+
+            score += 10;
+            document.getElementById("score").innerText = score;
+            document.getElementById("infoBox").innerText =
+                "Outfit changed! ⭐ +10 points!";
+        }, 400);
+    }
+
+    function showFact() {
+        document.getElementById("infoBox").innerText = facts[currentGroup];
+    }
+</script>
+
+</body>
+</html>
+
+
+  
+<script>
+const outfits = [
+  { name: "Kalinga", img: "kalinga.png" },
+  { name: "Ivatan", img: "ivatan.png" },
+  { name: "Bontoc", img: "bontoc.png" },
+  { name: "Tagalog", img: "tagalog.png" }
+];
+
+let currentIndex = 0;
+let score = 0;
+
+function changeOutfit() {
+  const img = document.getElementById("character");
+  const tribeText = document.getElementById("tribeName");
+
+  img.classList.add("fade");
+
+  setTimeout(() => {
+    currentIndex = (currentIndex + 1) % outfits.length;
+    img.src = outfits[currentIndex].img;
+    tribeText.textContent = outfits[currentIndex].name;
+
+    score += 10;
+    document.getElementById("score").textContent = score;
+
+    img.classList.remove("fade");
+  }, 500);
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
